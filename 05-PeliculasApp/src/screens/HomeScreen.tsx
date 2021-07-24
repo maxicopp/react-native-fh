@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ActivityIndicator, Dimensions, View, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Carousel from 'react-native-snap-carousel';
@@ -23,6 +24,11 @@ export const HomeScreen = () => {
     const [primary = 'green', secondary = 'orange'] = await getImageColors(uri);
     setMainColors({ primary, secondary });
   };
+  useEffect(() => {
+    if (nowPlaying.length > 0) {
+      getPosterColors(0);
+    }
+  }, [nowPlaying]);
   if (isLoading) {
     return (
       <View
