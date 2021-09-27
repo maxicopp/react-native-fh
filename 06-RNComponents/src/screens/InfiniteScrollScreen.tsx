@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { ActivityIndicator, FlatList, Image, View } from 'react-native';
+import { ActivityIndicator, FlatList, View } from 'react-native';
+import { FadeInImage } from '../components/FadeInImage';
 import { HeaderTitle } from '../components/HeaderTitle';
 
 export const InfiniteScrollScreen = () => {
@@ -15,13 +16,10 @@ export const InfiniteScrollScreen = () => {
     }, 1500);
   };
   const renderItem = (item: number) => (
-    <Image
-      source={{ uri: `https://picsum.photos/id/${item}/500/400` }}
-      style={{ width: '100%', height: 400 }}
-    />
+    <FadeInImage uri={`https://picsum.photos/id/${item}/500/400`} />
   );
   return (
-    <View style={{ flex: 1, backgroundColor: 'red' }}>
+    <View style={{ flex: 1 }}>
       <FlatList
         data={numbers}
         keyExtractor={item => item.toString()}
