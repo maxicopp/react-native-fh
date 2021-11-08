@@ -1,24 +1,37 @@
-import React, { createContext } from 'react';
+import { Theme } from '@react-navigation/native';
 
-interface ThemeContextProps {
-  theme: any; // TODO:
-  setDarkTheme: () => void;
-  setLightTheme: () => void;
+type ThemeAction = { type: 'set_light_theme' } | { type: 'set_dark_theme' };
+
+export interface ThemeState extends Theme {
+  currentTheme: 'light' | 'dark';
+  dividerColor: string;
 }
 
-export const ThemeContext = createContext({} as ThemeContextProps);
+const lightTheme: ThemeState = {
+  currentTheme: 'light',
+  dark: false,
+  dividerColor: 'rgba(0,0,0,0.7)',
+  colors: {
+    primary: 'red',
+    background: 'blue',
+    card: 'green',
+    text: 'pink',
+    border: 'orange',
+    notification: 'teal',
+  },
+};
 
-export const ThemeProvider = ({ children }: any) => {
-  const theme = {};
-  const setDarkTheme = () => {
-    console.log('setDarkTheme');
-  };
-  const setLightTheme = () => {
-    console.log('setLightTheme');
-  };
-  return (
-    <ThemeContext.Provider value={{ theme, setDarkTheme, setLightTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+export const themeReducer = (
+  state: ThemeState,
+  action: ThemeAction,
+): ThemeState => {
+  switch (action.type) {
+    case 'set_light_theme':
+      return {
+        ...lightTheme,
+      };
+
+    default:
+      return state;
+  }
 };

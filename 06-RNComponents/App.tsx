@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import { Navigator } from './src/navigator/Navigator';
-import { ThemeProvider } from './src/context/themeContext/themeReducer';
+import { ThemeProvider } from './src/context/themeContext/ThemeContext';
 
 // const customTheme: Theme = {
 //   dark: true,

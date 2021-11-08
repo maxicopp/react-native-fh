@@ -2,7 +2,7 @@
 import React, { useContext } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { HeaderTitle } from '../components/HeaderTitle';
-import { ThemeContext } from '../context/themeContext/themeReducer';
+import { ThemeContext } from '../context/themeContext/ThemeContext';
 import { styles } from '../theme/appTheme';
 
 export const ChangeThemeScreen = () => {
