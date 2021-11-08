@@ -10,13 +10,27 @@ export interface ThemeState extends Theme {
 export const lightTheme: ThemeState = {
   currentTheme: 'light',
   dark: false,
-  dividerColor: 'rgba(0,0,0,0.7)',
+  dividerColor: 'rgba(0,0,0,0.6)',
   colors: {
-    primary: 'red',
+    primary: '#084F6A',
     background: 'white',
-    card: 'green',
-    text: 'pink',
-    border: 'orange',
+    card: 'white',
+    text: 'black',
+    border: 'black',
+    notification: 'teal',
+  },
+};
+
+export const darkTheme: ThemeState = {
+  currentTheme: 'dark',
+  dark: true,
+  dividerColor: 'rgba(255,255,255,0.6)',
+  colors: {
+    primary: '#75CEDB',
+    background: 'black',
+    card: 'black',
+    text: 'white',
+    border: 'black',
     notification: 'teal',
   },
 };
@@ -29,6 +43,10 @@ export const themeReducer = (
     case 'set_light_theme':
       return {
         ...lightTheme,
+      };
+    case 'set_dark_theme':
+      return {
+        ...darkTheme,
       };
 
     default:

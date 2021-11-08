@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   ActivityIndicator,
   Animated,
@@ -7,6 +7,7 @@ import {
   StyleProp,
   View,
 } from 'react-native';
+import { ThemeContext } from '../context/themeContext/ThemeContext';
 import { useAnimation } from '../hooks/useAnimation';
 
 interface Props {
@@ -15,6 +16,9 @@ interface Props {
 }
 
 export const FadeInImage = ({ uri, style = {} }: Props) => {
+  const {
+    theme: { colors },
+  } = useContext(ThemeContext);
   const { opacity, fadeIn } = useAnimation();
   const [isLoading, setIsLoading] = useState(true);
   const finishLoading = () => {
@@ -26,7 +30,7 @@ export const FadeInImage = ({ uri, style = {} }: Props) => {
       {isLoading && (
         <ActivityIndicator
           style={{ position: 'absolute' }}
-          color="#5856D6"
+          color={colors.primary}
           size={30}
         />
       )}
