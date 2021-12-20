@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -20,18 +20,24 @@ const windowWidth = Dimensions.get('window').width;
 
 export const PokemonCard = ({ pokemon }: Props) => {
   const [bgColor, setBgColor] = useState('grey');
+  const isMounted = useRef(true);
   const setColors = async () => {
     const colors = await ImageColors.getColors(pokemon.picture, {
       fallback: 'grey',
     });
-    console.log(colors);
 
     colors.platform === 'android'
       ? setBgColor(colors.dominant || 'grey')
       : setBgColor(colors.background || 'grey');
   };
   useEffect(() => {
+    if (!isMounted.current) {
+      return;
+    }
     setColors();
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
   return (
     <TouchableOpacity activeOpacity={0.9}>
