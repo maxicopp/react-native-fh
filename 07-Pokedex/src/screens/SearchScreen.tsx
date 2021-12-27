@@ -1,38 +1,35 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Dimensions, FlatList, Platform, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Loading } from '../components/Loading';
 import { PokemonCard } from '../components/PokemonCard';
 import { SearchInput } from '../components/SearchInput';
 import { usePokemonSearch } from '../hooks/usePokemonSearch';
-import { styles as globalStyles } from '../theme/appTheme';
+import { styles } from '../theme/appTheme';
+
+const screenWidth = Dimensions.get('window').width;
 
 export const SearchScreen = () => {
   const { top } = useSafeAreaInsets();
   const { isFetching, simplePokemonList } = usePokemonSearch();
   if (isFetching) {
-    return (
-      <View style={styles.activityContainer}>
-        <ActivityIndicator size={50} color="grey" />
-        <Text>Cargando...</Text>
-      </View>
-    );
+    return <Loading />;
   }
   return (
     <View
       style={{
         flex: 1,
-        marginTop: Platform.OS === 'ios' ? top : top + 10,
         marginHorizontal: 20,
       }}>
-      <SearchInput />
+      <SearchInput
+        style={{
+          position: 'absolute',
+          zIndex: 999,
+          width: screenWidth - 40,
+          top: Platform.OS === 'ios' ? top : top + 30,
+        }}
+      />
       <FlatList
         data={simplePokemonList}
         keyExtractor={pokemon => pokemon.id}
@@ -42,9 +39,10 @@ export const SearchScreen = () => {
         ListHeaderComponent={
           <Text
             style={{
-              ...globalStyles.title,
-              ...globalStyles.globalMargin,
+              ...styles.title,
+              ...styles.globalMargin,
               paddingBottom: 10,
+              marginTop: Platform.OS === 'ios' ? top + 60 : top + 80,
             }}>
             Pokedex
           </Text>
@@ -54,11 +52,3 @@ export const SearchScreen = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  activityContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
