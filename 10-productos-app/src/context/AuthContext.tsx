@@ -38,12 +38,17 @@ export const AuthProvider = ({ children }: any) => {
       });
     } catch (error) {
       const err = error as AxiosError;
-      console.log(err.response?.data.msg);
+      dispatch({
+        type: 'addError',
+        payload: err.response?.data.msg || 'Información incorrecta',
+      });
     }
   };
   const signUp = () => {};
   const logOut = () => {};
-  const removeError = () => {};
+  const removeError = () => {
+    dispatch({ type: 'removeError' });
+  };
   return (
     <AuthContext.Provider
       value={{ ...state, signUp, signIn, logOut, removeError }}>

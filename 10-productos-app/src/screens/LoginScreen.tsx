@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -9,6 +9,7 @@ import {
   TextInput,
   View,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { Background } from '../components/Background';
 import { WhiteLogo } from '../components/WhiteLogo';
@@ -19,8 +20,17 @@ import { loginStyles } from '../theme/loginTheme';
 interface Props extends StackScreenProps<any, any> {}
 
 export const LoginScreen = ({ navigation }: Props) => {
-  const { signIn } = useContext(AuthContext);
+  const { signIn, errorMessage, removeError } = useContext(AuthContext);
   const { email, password, onChange } = useForm({ email: '', password: '' });
+  useEffect(() => {
+    if (errorMessage.length === 0) {
+      return;
+    }
+    Alert.alert('Login incorrecto', errorMessage, [
+      { text: 'Ok', onPress: removeError },
+    ]);
+  }, [errorMessage, removeError]);
+
   const onLogin = () => {
     console.log({ email, password });
     Keyboard.dismiss();
