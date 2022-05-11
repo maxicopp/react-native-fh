@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   ScrollView,
@@ -8,6 +8,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ProductsStackParams } from '../navigator/ProductsNavigator';
 
@@ -16,6 +17,7 @@ interface Props
 
 export const ProductScreen = ({ route, navigation }: Props) => {
   const { id, name = '' } = route.params;
+  const [selectedLanguage, setSelectedLanguage] = useState();
   useEffect(() => {
     navigation.setOptions({
       title: name ? name : 'Nuevo producto',
@@ -29,6 +31,14 @@ export const ProductScreen = ({ route, navigation }: Props) => {
         <TextInput placeholder="Producto" style={styles.textInput} />
         {/* Picker / Selector */}
         <Text style={styles.label}>Categoría:</Text>
+        <Picker
+          selectedValue={selectedLanguage}
+          onValueChange={(itemValue, itemIndex) =>
+            setSelectedLanguage(itemValue)
+          }>
+          <Picker.Item label="Java" value="java" />
+          <Picker.Item label="JavaScript" value="js" />
+        </Picker>
         {/* TODO: Por hacer */}
         <Button title="Guardar" onPress={() => {}} color="#5856D6" />
         <View
