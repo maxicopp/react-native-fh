@@ -1,7 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   FlatList,
+  RefreshControl,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -16,6 +17,7 @@ interface Props
 
 export const ProductsScreen = ({ navigation }: Props) => {
   const { products, loadProducts } = useContext(ProductsContext);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -28,8 +30,11 @@ export const ProductsScreen = ({ navigation }: Props) => {
       ),
     });
   }, [navigation]);
-
-  // TODO: Pull to refresh
+  const loadProductsFromBackend = async () => {
+    setIsRefreshing(true);
+    await loadProducts();
+    setIsRefreshing(false);
+  };
   return (
     <View style={{ flex: 1, marginHorizontal: 10 }}>
       <FlatList
@@ -48,6 +53,12 @@ export const ProductsScreen = ({ navigation }: Props) => {
           </TouchableOpacity>
         )}
         ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
+        refreshControl={
+          <RefreshControl
+            onRefresh={loadProductsFromBackend}
+            refreshing={isRefreshing}
+          />
+        }
       />
     </View>
   );
