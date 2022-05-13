@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   Button,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -37,7 +38,6 @@ export const ProductScreen = ({ route, navigation }: Props) => {
     nombre: name,
     img: '',
   });
-  const [selectedLanguage, setSelectedLanguage] = useState();
   useEffect(() => {
     navigation.setOptions({
       title: name ? name : 'Nuevo producto',
@@ -72,10 +72,8 @@ export const ProductScreen = ({ route, navigation }: Props) => {
         {/* Picker / Selector */}
         <Text style={styles.label}>Categoría:</Text>
         <Picker
-          selectedValue={selectedLanguage}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedLanguage(itemValue)
-          }>
+          selectedValue={categoriaId}
+          onValueChange={value => onChange(value, 'categoriaId')}>
           {categories.map(c => (
             <Picker.Item label={c.nombre} value={c._id} key={c._id} />
           ))}
@@ -92,7 +90,13 @@ export const ProductScreen = ({ route, navigation }: Props) => {
           <View style={{ width: 10 }} />
           <Button title="Galería" onPress={() => {}} color="#5856D6" />
         </View>
-        <Text>{JSON.stringify(form, null, 5)}</Text>
+        {img.length > 0 && (
+          <Image
+            source={{ uri: img }}
+            style={{ width: '100%', height: 300, marginTop: 20 }}
+          />
+        )}
+        {/* TODO: Mostrar imagen temporal */}
       </ScrollView>
     </View>
   );
