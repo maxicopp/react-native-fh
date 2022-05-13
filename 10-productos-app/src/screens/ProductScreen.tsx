@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Button,
   ScrollView,
@@ -12,25 +13,62 @@ import { Picker } from '@react-native-picker/picker';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ProductsStackParams } from '../navigator/ProductsNavigator';
 import { useCategories } from '../hooks/useCategories';
+import { useForm } from '../hooks/useForm';
+import { ProductsContext } from '../context/ProductsContext';
 
 interface Props
   extends StackScreenProps<ProductsStackParams, 'ProductScreen'> {}
 
 export const ProductScreen = ({ route, navigation }: Props) => {
-  const { id, name = '' } = route.params;
+  const { id = '', name = '' } = route.params;
   const { categories } = useCategories();
+  const { loadProductById } = useContext(ProductsContext);
+  const {
+    _id,
+    categoriaId,
+    nombre,
+    img,
+    form,
+    onChange,
+    setFormValue,
+  } = useForm({
+    _id: id,
+    categoriaId: '',
+    nombre: name,
+    img: '',
+  });
   const [selectedLanguage, setSelectedLanguage] = useState();
   useEffect(() => {
     navigation.setOptions({
       title: name ? name : 'Nuevo producto',
     });
   }, [name, navigation]);
+  useEffect(() => {
+    loadProduct();
+  }, []);
+  const loadProduct = async () => {
+    if (id.length === 0) {
+      return;
+    }
+    const product = await loadProductById(id);
+    setFormValue({
+      _id: id,
+      categoriaId: product.categoria._id,
+      img: product.img || '',
+      nombre,
+    });
+  };
   return (
     <View style={styles.container}>
       <ScrollView>
         <Text style={styles.label}>Nombre del producto:</Text>
         {/* TODO: add value and onChangeText to TextInput */}
-        <TextInput placeholder="Producto" style={styles.textInput} />
+        <TextInput
+          placeholder="Producto"
+          style={styles.textInput}
+          value={nombre}
+          onChangeText={value => onChange(value, 'nombre')}
+        />
         {/* Picker / Selector */}
         <Text style={styles.label}>Categoría:</Text>
         <Picker
@@ -54,6 +92,7 @@ export const ProductScreen = ({ route, navigation }: Props) => {
           <View style={{ width: 10 }} />
           <Button title="Galería" onPress={() => {}} color="#5856D6" />
         </View>
+        <Text>{JSON.stringify(form, null, 5)}</Text>
       </ScrollView>
     </View>
   );
