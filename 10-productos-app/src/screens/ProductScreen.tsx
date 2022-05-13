@@ -23,16 +23,10 @@ interface Props
 export const ProductScreen = ({ route, navigation }: Props) => {
   const { id = '', name = '' } = route.params;
   const { categories } = useCategories();
-  const { loadProductById, addProduct, updateProduct } = useContext(ProductsContext);
-  const {
-    _id,
-    categoriaId,
-    nombre,
-    img,
-    form,
-    onChange,
-    setFormValue,
-  } = useForm({
+  const { loadProductById, addProduct, updateProduct } = useContext(
+    ProductsContext,
+  );
+  const { _id, categoriaId, nombre, img, onChange, setFormValue } = useForm({
     _id: id,
     categoriaId: '',
     nombre: name,
@@ -58,12 +52,13 @@ export const ProductScreen = ({ route, navigation }: Props) => {
       nombre,
     });
   };
-  const saveOrUpdate = () => {
+  const saveOrUpdate = async () => {
     if (id.length > 0) {
       updateProduct(categoriaId, nombre, id);
     } else {
       const tempCategoriaId = categoriaId || categories[0]._id;
-      addProduct(tempCategoriaId, nombre);
+      const newProduct = await addProduct(tempCategoriaId, nombre);
+      onChange(newProduct._id, '_id');
     }
   };
   return (
@@ -86,9 +81,8 @@ export const ProductScreen = ({ route, navigation }: Props) => {
             <Picker.Item label={c.nombre} value={c._id} key={c._id} />
           ))}
         </Picker>
-        {/* TODO: Por hacer */}
         <Button title="Guardar" onPress={saveOrUpdate} color="#5856D6" />
-        {id.length > 0 && (
+        {_id.length > 0 && (
           <View
             style={{
               flexDirection: 'row',
