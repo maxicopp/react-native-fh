@@ -29,12 +29,18 @@ export const ProductsProvider = ({ children }: any) => {
     // setProducts([...products, ...resp.data.productos]);
     setProducts([...resp.data.productos]);
   };
-  const addProduct = async (categoryId: string, productName: string) => {};
+  const addProduct = async (categoryId: string, productName: string) => {
+    console.log('addProduct');
+    console.log({ categoryId, productName });
+  };
   const updateProduct = async (
     categoryId: string,
     productName: string,
     productId: string,
-  ) => {};
+  ) => {
+    console.log('updateProduct');
+    console.log({ categoryId, productName, productId });
+  };
   const deleteProduct = async (id: string) => {};
   const loadProductById = async (id: string): Promise<Producto> => {
     const resp = await cafeApi.get<Producto>(`/productos/${id}`);
