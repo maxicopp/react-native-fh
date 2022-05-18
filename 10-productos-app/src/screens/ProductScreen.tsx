@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { launchCamera } from 'react-native-image-picker';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ProductsStackParams } from '../navigator/ProductsNavigator';
 import { useCategories } from '../hooks/useCategories';
@@ -25,9 +25,12 @@ export const ProductScreen = ({ route, navigation }: Props) => {
   const { id = '', name = '' } = route.params;
   const [tempUri, setTempUri] = useState<string>();
   const { categories } = useCategories();
-  const { loadProductById, addProduct, updateProduct } = useContext(
-    ProductsContext,
-  );
+  const {
+    loadProductById,
+    addProduct,
+    updateProduct,
+    uploadImage,
+  } = useContext(ProductsContext);
   const { _id, categoriaId, nombre, img, onChange, setFormValue } = useForm({
     _id: id,
     categoriaId: '',
@@ -64,18 +67,16 @@ export const ProductScreen = ({ route, navigation }: Props) => {
     }
   };
   const takePhoto = () => {
-    launchCamera(
-      { mediaType: 'photo', quality: 0.5 },
-      ({ assets, didCancel }) => {
-        if (didCancel) {
-          return;
-        }
-        if (!assets![0].uri) {
-          return;
-        }
-        setTempUri(assets![0].uri);
-      },
-    );
+    launchCamera({ mediaType: 'photo', quality: 0.5 }, resp => {
+      if (resp.didCancel) {
+        return;
+      }
+      if (!resp.assets![0].uri) {
+        return;
+      }
+      setTempUri(resp.assets![0].uri);
+      uploadImage(resp, _id);
+    });
   };
   return (
     <View style={styles.container}>
