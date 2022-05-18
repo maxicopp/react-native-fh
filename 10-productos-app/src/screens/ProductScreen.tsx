@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { launchCamera } from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ProductsStackParams } from '../navigator/ProductsNavigator';
 import { useCategories } from '../hooks/useCategories';
@@ -78,6 +78,18 @@ export const ProductScreen = ({ route, navigation }: Props) => {
       uploadImage(resp, _id);
     });
   };
+  const takePhotoFromGallery = () => {
+    launchImageLibrary({ mediaType: 'photo', quality: 0.5 }, resp => {
+      if (resp.didCancel) {
+        return;
+      }
+      if (!resp.assets![0].uri) {
+        return;
+      }
+      setTempUri(resp.assets![0].uri);
+      uploadImage(resp, _id);
+    });
+  };
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -108,7 +120,11 @@ export const ProductScreen = ({ route, navigation }: Props) => {
             }}>
             <Button title="Cámara" onPress={takePhoto} color="#5856D6" />
             <View style={{ width: 10 }} />
-            <Button title="Galería" onPress={() => {}} color="#5856D6" />
+            <Button
+              title="Galería"
+              onPress={takePhotoFromGallery}
+              color="#5856D6"
+            />
           </View>
         )}
         {img.length > 0 && !tempUri && (
